@@ -1,0 +1,10 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Initial" verbose="5" preserve-order="true">
+	<test name="basicTest">
+		<classes>
+			<class name="cz.instance.utils.docs.test.DocProviderTest">
+			</class>
+		</classes>
+	</test>
+</suite>
