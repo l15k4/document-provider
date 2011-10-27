@@ -42,7 +42,7 @@ public class DocumentProvider {
 		if(!documents.isEmpty())
 			return documents;
 		
-		File docs = new File(DocumentProvider.class.getClassLoader().getResource("docs").toURI());
+		File docs = new File(DocumentProvider.class.getClass().getResource("/docs").toURI());
 		if (!docs.exists())
 			throw new Exception("docs directory doesn't exist");
 
