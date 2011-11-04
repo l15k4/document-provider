@@ -26,38 +26,36 @@ public class DocumentProvider {
 
 	private static Logger logger = LoggerFactory.getLogger(DocumentProvider.class);
 	private static final Map<String, List<Document>> documents = new HashMap<String, List<Document>>();
-	
-	public static String htmlType = "html";
-	public static String txtType = "txt";
-	public static String pdfType = "pdf";
-	public static String odtType = "odt";
-	public static String docxType = "docx";
-	public static String docType = "doc";
-	public static String xlsxType = "xlsx";
-	public static String xlsType = "xls";
-	public static String pptType = "ppt";
+
+	public static final String htmlType = "html";
+	public static final String txtType = "txt";
+	public static final String pdfType = "pdf";
+	public static final String odtType = "odt";
+	public static final String docxType = "docx";
+	public static final String docType = "doc";
+	public static final String xlsxType = "xlsx";
+	public static final String xlsType = "xls";
+	public static final String pptType = "ppt";
 
 	public static Map<String, List<Document>> getDocuments() throws Exception {
-		
-		if(!documents.isEmpty())
+
+		if (!documents.isEmpty())
 			return documents;
-		
-		File docs = new File(DocumentProvider.class.getClass().getResource("/docs").toURI());
-		if (!docs.exists())
-			throw new Exception("docs directory doesn't exist");
+
+		File destDir = prepareDestDir("docProv");
 
 		InputStream fis = DocumentGenerator.class.getClass().getResourceAsStream("/fonts/FreeSans.ttf");
 
-		List<Document> textContentEntities = DocumentGenerator.exe(htmlType, docs);
-		List<Document> textEntities = new TXTGenerator().createDocs(txtType, docs, textContentEntities);
-		List<Document> htmlEntities = new HTMLGenerator().createDocs(htmlType, docs, textEntities);
-		List<Document> pdfEntities = new PDFGenerator(fis).createDocs(pdfType, docs, textEntities);
-		List<Document> odtEntities = new ODFGenerator().createDocs(odtType, docs, textEntities);
-		List<Document> docxEntities = new DOCxGenerator().createDocs(docxType, docs, textEntities);
-		List<Document> docEntities = new DOCGenerator().createDocs(docType, docs, textEntities);
-		List<Document> xlsxEntities = new XLSxGenerator().createDocs(xlsxType, docs, textEntities);
-		List<Document> xlsEntities = new XLSGenerator().createDocs(xlsType, docs, textEntities);
-		List<Document> pptEntities = new PPTGenerator().createDocs(pptType, docs, textEntities);
+		List<Document> textContentEntities = DocumentGenerator.exe(htmlType, destDir);
+		List<Document> textEntities = new TXTGenerator().createDocs(txtType, destDir, textContentEntities);
+		List<Document> htmlEntities = new HTMLGenerator().createDocs(htmlType, destDir, textEntities);
+		List<Document> pdfEntities = new PDFGenerator(fis).createDocs(pdfType, destDir, textEntities);
+		List<Document> odtEntities = new ODFGenerator().createDocs(odtType, destDir, textEntities);
+		List<Document> docxEntities = new DOCxGenerator().createDocs(docxType, destDir, textEntities);
+		List<Document> docEntities = new DOCGenerator().createDocs(docType, destDir, textEntities);
+		List<Document> xlsxEntities = new XLSxGenerator().createDocs(xlsxType, destDir, textEntities);
+		List<Document> xlsEntities = new XLSGenerator().createDocs(xlsType, destDir, textEntities);
+		List<Document> pptEntities = new PPTGenerator().createDocs(pptType, destDir, textEntities);
 
 		documents.put(txtType, textEntities);
 		documents.put(htmlType, htmlEntities);
@@ -71,29 +69,28 @@ public class DocumentProvider {
 
 		return documents;
 	}
-	
-	
+
 	public static Map<String, List<Document>> getDocsWithKeyPrefix(String prefix) {
 		prefix = prefix + ".";
 		Map<String, List<Document>> newMap = new HashMap<String, List<Document>>();
-		
-		for(String ext : documents.keySet()){
+
+		for (String ext : documents.keySet()) {
 			newMap.put(prefix + ext, documents.get(ext));
 		}
 		return newMap;
 	}
 
-	public static Document[] getLangsByType(String type, String...langCodes) throws Exception {
+	public static Document[] getLangsByType(String type, String... langCodes) throws Exception {
 		List<Document> all = getAllLangsByType(type);
 		List<Document> result = new ArrayList<Document>(langCodes.length);
-		for(Document e : all) {
-			if(ArrayUtils.contains(langCodes, e.getState()))
-					result.add(e);
+		for (Document e : all) {
+			if (ArrayUtils.contains(langCodes, e.getState()))
+				result.add(e);
 		}
 		Document[] array = new Document[result.size()];
 		return result.toArray(array);
 	}
-	
+
 	public static List<Document> getAllLangsByType(String type) throws Exception {
 		Map<String, List<Document>> entities = getDocuments();
 		return entities.get(type);
@@ -197,5 +194,17 @@ public class DocumentProvider {
 			System.out.println("sample : " + entity.getSample() + "\n");
 			System.out.println("-------------");
 		}
+	}
+	
+	private static File prepareDestDir(String dirName) {
+		File tmpDir = new File(System.getProperty("java.io.tmpdir"));
+		if (!tmpDir.exists())
+			throw new IllegalStateException("temp directory: " + tmpDir.getAbsolutePath() + " doesn't exist");
+
+		String destDirPath = tmpDir.getAbsolutePath() + File.separator + dirName;
+		File destDir = new File(destDirPath);
+		if (!destDir.mkdir())
+			logger.warn("Dir : " + destDirPath + " already exists - documents will be reused to not waste doc provider's bandwidth");
+		return destDir;
 	}
 }

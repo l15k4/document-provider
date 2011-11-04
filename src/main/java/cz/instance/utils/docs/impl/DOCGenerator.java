@@ -28,7 +28,7 @@ public class DOCGenerator extends DocumentGenerator {
 	
 		// POI apparently can't create a document from scratch,
 		// so we need an existing empty dummy document
-		POIFSFileSystem fs = new POIFSFileSystem(DOCGenerator.class.getClass().getResourceAsStream("/poi/template.doc"));
+		POIFSFileSystem fs = new POIFSFileSystem(Thread.currentThread().getClass().getResourceAsStream("/poi/template.doc"));
 		HWPFDocument doc = new HWPFDocument(fs);
 	
 		Range range = doc.getRange();
@@ -37,6 +37,5 @@ public class DOCGenerator extends DocumentGenerator {
 		CharacterRun run1 = par1.insertBefore(from, new CharacterProperties());
 		run1.setFontSize(11);
 		doc.write(new FileOutputStream(file));
-
 	}
 }

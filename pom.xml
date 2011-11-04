@@ -12,6 +12,7 @@
 		<pdfbox.version>1.6.0</pdfbox.version>
 		<tika.version>1.0-SNAPSHOT</tika.version>
 		<apache.poi.version>3.8-beta4</apache.poi.version>
+		<org.slf4j.version>1.5.11</org.slf4j.version>
 	</properties>
 
 	<build>
@@ -131,7 +132,7 @@
 		<dependency>
 			<groupId>com.google.guava</groupId>
 			<artifactId>guava</artifactId>
-			<version>r08</version>
+			<version>10.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
@@ -173,17 +174,14 @@
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
-				<version>1.5.11</version>
+				<version>${org.slf4j.version}</version>
+				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.5.11</version>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-ext</artifactId>
-				<version>1.5.11</version>
+				<version>${org.slf4j.version}</version>
+				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.apache.tika</groupId>

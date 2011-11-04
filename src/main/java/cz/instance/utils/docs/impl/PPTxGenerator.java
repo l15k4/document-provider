@@ -2,6 +2,7 @@ package cz.instance.utils.docs.impl;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
 
 import cz.instance.utils.docs.DocumentGenerator;
 
@@ -19,10 +20,13 @@ public class PPTxGenerator extends DocumentGenerator {
 
 	private void createPPTxDocument(String from, File file) throws Exception {
 
-		file = new File(Thread.currentThread().getClass().getResource("poi/template.pptx").toURI());
+		InputStream input = Thread.currentThread().getClass().getResourceAsStream("/poi/template.pptx");
 		FileOutputStream out = new FileOutputStream(file);
+		
+		int b;
+		while((b = input.read()) >= 0) {
+			out.write(b);
+		}
 		out.close();
-
 	}
-
 }
