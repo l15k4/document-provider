@@ -175,7 +175,6 @@
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
 				<version>${org.slf4j.version}</version>
-				<scope>runtime</scope>
 			</dependency>
 			<dependency>
 				<groupId>org.slf4j</groupId>
@@ -249,7 +248,5 @@
 				<version>${apache.poi.version}</version>
 			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
-
 </project>
